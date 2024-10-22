@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.minecraftabnormals.mindful_eating.core.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mindful_eating.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "HungerGuiMixin"
+  ],
+  "minVersion": "0.8"
+}
