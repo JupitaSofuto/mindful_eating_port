@@ -17,8 +17,8 @@ public class HungerGuiMixin {
     @Redirect(method = "renderFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     //@Inject(method = "renderFood", at = @At(value = "HEAD"),remap = false, cancellable = true)
     public void renderFood(GuiGraphics instance, ResourceLocation pAtlasLocation, int pX, int pY, int pUOffset, int pVOffset, int pUWidth, int pVHeight) {
-       instance.blit(HungerOverlay.GUI_EMPTY_ICONS_LOCATION,pX,pY,0,0,0,0);
-        //i.cancel();
+       instance.blit(HungerOverlay.GUI_EMPTY_ICONS_LOCATION,pX,pY,0,0,9,9);
+       // ci.cancel();
         //RenderSystem.setShaderTexture(0, HungerOverlay.GUI_EMPTY_ICONS_LOCATION);
     }
 }

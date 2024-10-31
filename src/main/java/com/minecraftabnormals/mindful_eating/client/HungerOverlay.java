@@ -38,7 +38,7 @@ import java.util.Set;
 
 import static com.minecraftabnormals.mindful_eating.core.MindfulEating.bus;
 
-@OnlyIn(Dist.CLIENT)
+
 @Mod.EventBusSubscriber(modid = MindfulEating.MODID, value = Dist.CLIENT)
 public class HungerOverlay {
 
@@ -51,17 +51,13 @@ public class HungerOverlay {
 
     private static final Random random = new Random();
     public static int foodIconOffset;
-    public static void init(){
-
-        MinecraftForge.EVENT_BUS.addListener(HungerOverlay::hungerIconOverride);
-        bus.addListener(HungerOverlay::registerOverlay);
-    }
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @OnlyIn(Dist.CLIENT)
     public static void hungerIconOverride(RenderGuiOverlayEvent event) {
         if (event.getOverlay() == GuiOverlayManager.findOverlay(FOOD_LEVEL_ELEMENT) && ModList.get().isLoaded("farmersdelight")) {
             FarmersDelightCompat.resetNourishedHungerOverlay();
         }
     }
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void registerOverlay(RegisterGuiOverlaysEvent event){
         event.registerAbove(FOOD_LEVEL_ELEMENT, "mindful_eating_hunger", ((gui, graphics, partialTicks, width, height) -> {
@@ -71,6 +67,7 @@ public class HungerOverlay {
             }
         }));
     }
+    @OnlyIn(Dist.CLIENT)
     public static void renderHungerIcons(ForgeGui gui, GuiGraphics poseStack) {
         Player player = minecraft.player;
         IDataManager playerManager = ((IDataManager) player);
@@ -94,7 +91,7 @@ public class HungerOverlay {
 
         drawHungerIcons(player, foodData, top, left, poseStack, playerManager, groups.toArray(new IDietGroup[0]));
     }
-
+    @OnlyIn(Dist.CLIENT)
     public static void drawHungerIcons(Player player, FoodData stats, int top, int left, GuiGraphics poseStack, IDataManager playerManager, IDietGroup[] groups) {
         ResourceLocation texture = GUI_HUNGER_ICONS_LOCATION;
         int level = stats.getFoodLevel();
