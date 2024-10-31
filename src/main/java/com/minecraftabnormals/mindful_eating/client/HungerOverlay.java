@@ -25,14 +25,18 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import squeek.appleskin.client.HUDOverlayHandler;
 
 import java.util.Random;
 import java.util.Set;
+
+import static com.minecraftabnormals.mindful_eating.core.MindfulEating.bus;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = MindfulEating.MODID, value = Dist.CLIENT)
@@ -47,7 +51,11 @@ public class HungerOverlay {
 
     private static final Random random = new Random();
     public static int foodIconOffset;
+    public static void init(){
 
+        MinecraftForge.EVENT_BUS.addListener(HungerOverlay::hungerIconOverride);
+        bus.addListener(HungerOverlay::registerOverlay);
+    }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void hungerIconOverride(RenderGuiOverlayEvent event) {
         if (event.getOverlay() == GuiOverlayManager.findOverlay(FOOD_LEVEL_ELEMENT) && ModList.get().isLoaded("farmersdelight")) {
@@ -79,8 +87,8 @@ public class HungerOverlay {
         FoodData foodData = player.getFoodData();
         foodIconOffset = gui.rightHeight;
 
-        int top = minecraft.getWindow().getGuiScaledHeight() - foodIconOffset; //+ 10;
-        //foodIconOffset += 10;
+        int top = minecraft.getWindow().getGuiScaledHeight() - foodIconOffset + 10;
+        foodIconOffset += 10;
 
         int left = minecraft.getWindow().getGuiScaledWidth() / 2 + 91;
 

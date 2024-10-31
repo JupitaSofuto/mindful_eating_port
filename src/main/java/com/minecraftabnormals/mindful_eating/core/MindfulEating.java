@@ -5,8 +5,11 @@ import com.minecraftabnormals.mindful_eating.compat.AppleskinCompat;
 import com.teamabnormals.blueprint.common.world.storage.tracking.DataProcessors;
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedData;
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -41,13 +44,15 @@ public class MindfulEating
 
     public static final TrackedData<Boolean> HURT_OR_HEAL = TrackedData.Builder.create(DataProcessors.BOOLEAN, () -> false).enableSaving().build();
 
+    public static IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
     public MindfulEating() {
+        //IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.addListener(HungerOverlay::hungerIconOverride);
-        bus.addListener(HungerOverlay::registerOverlay);
+        //if(Minecraft.getInstance().level.isClientSide)
+        bus.addListener(ClientSetup::init);
+
         if (ModList.get().isLoaded("appleskin")) {
             MinecraftForge.EVENT_BUS.register(AppleskinCompat.class);
         }
@@ -57,5 +62,10 @@ public class MindfulEating
         TrackedDataManager.INSTANCE.registerData(new ResourceLocation(MindfulEating.MODID, "hurt_or_heal"), HURT_OR_HEAL);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MEConfig.COMMON_SPEC);
+    }
+    public static class ClientSetup {
+        public static void init(FMLClientSetupEvent event) {
+            HungerOverlay.init();
+        }
     }
 }
