@@ -9,8 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -68,7 +67,7 @@ public class HungerOverlay {
         }));
     }
     @OnlyIn(Dist.CLIENT)
-    public static void renderHungerIcons(ForgeGui gui, GuiGraphics poseStack) {
+    public static void renderHungerIcons(ForgeGui gui, PoseStack poseStack) {
         Player player = minecraft.player;
         IDataManager playerManager = ((IDataManager) player);
 
@@ -92,8 +91,8 @@ public class HungerOverlay {
         drawHungerIcons(player, foodData, top, left, poseStack, playerManager, groups.toArray(new IDietGroup[0]));
     }
     @OnlyIn(Dist.CLIENT)
-    public static void drawHungerIcons(Player player, FoodData stats, int top, int left, GuiGraphics poseStack, IDataManager playerManager, IDietGroup[] groups) {
-        ResourceLocation texture = GUI_HUNGER_ICONS_LOCATION;
+    public static void drawHungerIcons(Player player, FoodData stats, int top, int left, PoseStack poseStack, IDataManager playerManager, IDietGroup[] groups) {
+        RenderSystem.setShaderTexture(0, HungerOverlay.GUI_HUNGER_ICONS_LOCATION);
         int level = stats.getFoodLevel();
         int ticks = minecraft.gui.getGuiTicks();
         float modifiedSaturation = Math.min(stats.getSaturationLevel(), 20);
@@ -117,7 +116,7 @@ public class HungerOverlay {
                     && player.hasEffect(ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("farmersdelight", "nourishment")))
                     && FarmersDelightCompat.NOURISHED_HUNGER_OVERLAY) {
                 FarmersDelightCompat.setNourishedHungerOverlay(false);
-                texture = GUI_NOURISHMENT_ICONS_LOCATION;
+                RenderSystem.setShaderTexture(0, HungerOverlay.GUI_NOURISHMENT_ICONS_LOCATION);
                 icon -= player.hasEffect(MobEffects.HUNGER) ? 45 : 27;
                 background = 0;
             }
@@ -127,14 +126,15 @@ public class HungerOverlay {
             }
 
             //Draw some stuff
-            poseStack.blit(texture, x, y, background * 9, group, 9, 9, 126, 45);
+            GuiComponent.blit(poseStack, x, y, background * 9, group, 9, 9, 126, 45);
             if (idx < level) {
-                poseStack.blit(texture, x, y, icon + 36, group, 9, 9, 126, 45);
+                GuiComponent.blit(poseStack, x, y, icon + 36, group, 9, 9, 126, 45);
             } else if (idx == level) {
-                poseStack.blit(texture, x, y, icon + 45, group, 9, 9, 126, 45);
+                GuiComponent.blit(poseStack, x, y, icon + 45, group, 9, 9, 126, 45);
             }
 
-            texture = GUI_SATURATION_ICONS_LOCATION;
+            RenderSystem.setShaderTexture(0, HungerOverlay.GUI_SATURATION_ICONS_LOCATION);
+
             //apple skin loaded draw saturationn
             if (ModList.get().isLoaded("appleskin") && AppleskinCompat.SHOW_SATURATION_OVERLAY) {
                 float effectiveSaturationOfBar = (modifiedSaturation / 2.0F) - i;
@@ -153,19 +153,19 @@ public class HungerOverlay {
                 else
                     u = 0;
 
-                poseStack.blit(texture, x, y, u, v, 9, 9, 126, 45);
+                GuiComponent.blit(poseStack, x, y, u, v, 9, 9, 126, 45);
             }
 
             if (idx <= level) {
                 int tick = ticks % 20;
                 if (playerManager.getValue(MindfulEating.SHEEN_COOLDOWN) > 0 && ((tick < idx + level / 4 && tick > idx - level / 4)
                         || (tick == 49 && i == 0))) {
-                    texture = GUI_NOURISHMENT_ICONS_LOCATION;
+                    RenderSystem.setShaderTexture(0, HungerOverlay.GUI_NOURISHMENT_ICONS_LOCATION);
                     int uOffset = idx == level ? 18 : 9;
-                    poseStack.blit(texture, x, y, uOffset, group, 9, 9, 126, 45);
+                    GuiComponent.blit(poseStack, x, y, uOffset, group, 9, 9, 126, 45);
                 }
             }
-            texture = GUI_HUNGER_ICONS_LOCATION;
+            RenderSystem.setShaderTexture(0, HungerOverlay.GUI_HUNGER_ICONS_LOCATION);
         }
     }
 }

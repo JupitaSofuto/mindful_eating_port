@@ -182,7 +182,7 @@ public class MEEvents {
         double disY = player.getY() - player.yOld;
         double disZ = player.getZ() - player.zOld;
 
-        if (player.level().isClientSide ^ playerManager.getValue(MindfulEating.HURT_OR_HEAL)) {
+        if (player.level.isClientSide ^ playerManager.getValue(MindfulEating.HURT_OR_HEAL)) {
             playerManager.setValue(MindfulEating.SHEEN_COOLDOWN, max(0, playerManager.getValue(MindfulEating.SHEEN_COOLDOWN) - 1));
         }
 
@@ -196,7 +196,7 @@ public class MEEvents {
             reduction = 0.0001F * exhaustionReductionShortSheen(player, ExhaustionSource.SWIM) * Math.round(Mth.sqrt((float) disX * (float) disX + (float) disZ * (float) disZ) * 100.0F);
         } else if (player.isInWater()) {
             reduction = 0.0001F * exhaustionReductionShortSheen(player, ExhaustionSource.SWIM) * distance;
-        } else if (player.onGround() && player.isSprinting()) {
+        } else if (player.isOnGround() && player.isSprinting()) {
             reduction = 0.001F * exhaustionReductionShortSheen(player, ExhaustionSource.SPRINT) * distance;
         }
 
