@@ -108,10 +108,10 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${project.minecraft}-${project.forge}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation fg.deobf("curse.maven:blueprint-382216:5292242")
-    implementation fg.deobf("curse.maven:diet-443570:4813904")
-    implementation fg.deobf("curse.maven:appleskin-248787:4770828")
-    implementation fg.deobf("curse.maven:farmers-delight-398521:5051242")
+    implementation fg.deobf("curse.maven:blueprint-382216:${project.blueprint}")
+    implementation fg.deobf("curse.maven:diet-443570:${project.diet}")
+    implementation fg.deobf("curse.maven:appleskin-248787:${project.apple}")
+    implementation fg.deobf("curse.maven:farmers-delight-398521:${project.farmers}")
 }
 
 tasks.named('jar', Jar).configure {
